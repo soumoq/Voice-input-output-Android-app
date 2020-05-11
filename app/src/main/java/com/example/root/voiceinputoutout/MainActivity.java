@@ -1,6 +1,10 @@
 package com.example.root.voiceinputoutout;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +15,9 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -50,12 +57,31 @@ public class MainActivity extends AppCompatActivity {
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mSpeechRecognizerIntent;
     private String text;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //When permission is not granted by user, show them message why this permission is needed.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+
+            //Give user option to still opt-in the permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    MY_PERMISSIONS_RECORD_AUDIO);
+        }
+        else {
+            // Show user dialog to grant permission to record audio
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    MY_PERMISSIONS_RECORD_AUDIO);
+        }
 
 
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
