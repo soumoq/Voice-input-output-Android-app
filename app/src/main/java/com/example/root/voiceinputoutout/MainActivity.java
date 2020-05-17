@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale("en", "IN"));
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
 
         mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -152,6 +153,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResults(Bundle bundle) {
+
+
+            }
+
+            @Override
+            public void onPartialResults(Bundle bundle) {
+
 
                 ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (matches != null) {
@@ -192,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                         String stringHighlight=highLight.toString();
 
 
-                        Toast.makeText(MainActivity.this, stringHighlight.trim(), Toast.LENGTH_LONG).show();
+
 
                         new TextHighlighter().setBackgroundColor(Color.parseColor("#FFFF00"))
                                 .setForegroundColor(Color.RED)
@@ -203,10 +211,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {
 
             }
 
