@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.Tag;
@@ -22,6 +23,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.ThemedSpinnerAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -160,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPartialResults(Bundle bundle) {
 
-
                 ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (matches != null) {
                     String matchText = matches.get(0).toLowerCase();
@@ -175,14 +178,14 @@ public class MainActivity extends AppCompatActivity {
                         String words2[] = matchText.split("\\W+");
                         ArrayList<String> arr = new ArrayList<String>();
                         try {
-                            for (int i = 0; i < words1.length; i++) {
-                                if (!words1[i].equals(words2[i])) {
-                                    arr.add(words2[i]);
-                                }
-                            }
-                            if (words2.length > words1.length) {
-                                for (int j = words1.length; j < words2.length; j++) {
-                                    arr.add(words2[j]);
+                            for(int i=0;i<words2.length;i++)
+                            {
+                                for(int j=i;j<words1.length;j++)
+                                {
+                                    if(words1[j].equals(words2[i]))
+                                    {
+                                        arr.add(words1[j]);
+                                    }
                                 }
                             }
 
@@ -202,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                        new TextHighlighter().setBackgroundColor(Color.parseColor("#FFFF00"))
-                                .setForegroundColor(Color.RED)
+                        new TextHighlighter().setBackgroundColor(Color.parseColor("#b3ffe0"))
+                                .setForegroundColor(Color.GREEN)
                                 .addTarget(speakEditText)
                                 .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
 
@@ -219,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
         speakButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
