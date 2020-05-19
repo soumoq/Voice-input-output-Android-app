@@ -1,4 +1,5 @@
 package com.example.root.voiceinputoutout;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -79,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO},
                     MY_PERMISSIONS_RECORD_AUDIO);
-        }
-        else {
+        } else {
             // Show user dialog to grant permission to record audio
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO},
@@ -178,12 +178,9 @@ public class MainActivity extends AppCompatActivity {
                         String words2[] = matchText.split("\\W+");
                         ArrayList<String> arr = new ArrayList<String>();
                         try {
-                            for(int i=0;i<words2.length;i++)
-                            {
-                                for(int j=i;j<words1.length;j++)
-                                {
-                                    if(words1[j].equals(words2[i]))
-                                    {
+                            for (int i = 0; i < words2.length; i++) {
+                                for (int j = i; j < words1.length; j++) {
+                                    if (words1[j].equals(words2[i])) {
                                         arr.add(words1[j]);
                                     }
                                 }
@@ -194,22 +191,18 @@ public class MainActivity extends AppCompatActivity {
                         }
 
 
-                        StringBuffer highLight=new StringBuffer();
-                        for(int i=0;i<arr.size();i++)
-                        {
-                            highLight=highLight.append(arr.get(i)+" ");
+                        StringBuffer highLight = new StringBuffer();
+                        for (int i = 0; i < arr.size(); i++) {
+                            highLight = highLight.append(arr.get(i) + " ");
                         }
 
-                        String stringHighlight=highLight.toString();
+                        String stringHighlight = highLight.toString();
 
 
-
-
-                        new TextHighlighter().setBackgroundColor(Color.parseColor("#b3ffe0"))
+                        new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
                                 .setForegroundColor(Color.GREEN)
-                                .addTarget(speakEditText)
+                                .addTarget(voiceText)
                                 .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
-
 
                     }
 
