@@ -12,11 +12,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         check.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 boolean available;
@@ -264,7 +267,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String selectText() {
-        String[] texts = {"what are you doing", "i am going to school", "this is our home", "the rock is cooking", "i love to do reading"};
+
+        String[] texts = {"he loves fish tacos","there is so much to understand","brad came to dinner with us","i ate dinner","what are you doing", "i am going to school", "this is our home", "the rock is cooking", "i love reading"};
         Random rand = new Random();
         int value = rand.nextInt(texts.length);
         return texts[value];
@@ -285,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Downloading...", Toast.LENGTH_LONG).show();
             loding.setVisibility(View.VISIBLE);
             new Thread(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void run() {
                     boolean status = checkStatus();
@@ -320,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private boolean checkStatus() {
 
         boolean available = false;
