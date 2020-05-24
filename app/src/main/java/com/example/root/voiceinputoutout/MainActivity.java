@@ -125,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale("en", "IN"));
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Recording...");
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+        if (!netoworkConnection()) {
+            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
+        }
 
         mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -159,6 +164,50 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResults(Bundle bundle) {
+
+                ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null) {
+                    String matchText = matches.get(0).toLowerCase();
+                    speakEditText.setText(matchText);
+
+                    if (matchText.equals(text)) {
+                        Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
+                        text = selectText();
+                        voiceText.setText(text);
+                    } else {
+                        String words1[] = text.split("\\W+");
+                        String words2[] = matchText.split("\\W+");
+                        ArrayList<String> arr = new ArrayList<String>();
+                        try {
+                            for (int i = 0; i < words2.length; i++) {
+                                for (int j = i; j < words1.length; j++) {
+                                    if (words1[j].equals(words2[i])) {
+                                        arr.add(words1[j]);
+                                    }
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        StringBuffer highLight = new StringBuffer();
+                        for (int i = 0; i < arr.size(); i++) {
+                            highLight = highLight.append(arr.get(i) + " ");
+                        }
+
+                        String stringHighlight = highLight.toString();
+
+
+                        new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
+                                .setForegroundColor(Color.GREEN)
+                                .addTarget(voiceText)
+                                .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
+
+                    }
+
+                }
 
 
             }
@@ -220,9 +269,8 @@ public class MainActivity extends AppCompatActivity {
 
         speakButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-
-                switch (motionEvent.getAction()) {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_UP:
                         mSpeechRecognizer.stopListening();
                         speakEditText.setHint("You will see input here");
@@ -268,10 +316,20 @@ public class MainActivity extends AppCompatActivity {
 
     private String selectText() {
 
-        String[] texts = {"he loves fish tacos","there is so much to understand","brad came to dinner with us","i ate dinner","what are you doing", "i am going to school", "this is our home", "the rock is cooking", "i love reading"};
+        String[] texts = {"he loves fish tacos", "there is so much to understand", "he came to dinner with us", "i ate dinner", "what are you doing", "i am going to school", "this is our home", "the rock is cooking", "i love reading"};
         Random rand = new Random();
         int value = rand.nextInt(texts.length);
         return texts[value];
+    }
+
+    private boolean netoworkConnection() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 
 
