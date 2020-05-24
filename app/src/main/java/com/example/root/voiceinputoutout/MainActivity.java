@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale("en", "IN"));
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Recording...");
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
@@ -132,34 +132,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
+            boolean isEndOfSpeech = false;
+
             @Override
             public void onReadyForSpeech(Bundle params) {
+                //Toast.makeText(MainActivity.this,"onReadyForSpeech",Toast.LENGTH_LONG).show();
 
             }
 
             @Override
             public void onBeginningOfSpeech() {
+                //Toast.makeText(MainActivity.this,"onBeginningOfSpeech",Toast.LENGTH_LONG).show();
 
             }
 
             @Override
             public void onRmsChanged(float rmsdB) {
-
+                //Toast.makeText(MainActivity.this,"onRmsChanged",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onBufferReceived(byte[] buffer) {
+                //Toast.makeText(MainActivity.this,"onBufferReceived",Toast.LENGTH_LONG).show();
 
             }
 
             @Override
             public void onEndOfSpeech() {
-
+                isEndOfSpeech=true;
             }
 
             @Override
             public void onError(int error) {
-
+                if (!isEndOfSpeech) {
+                    Toast.makeText(MainActivity.this,"Please speak correctly",Toast.LENGTH_LONG).show();
+                    onEndOfSpeech();
+                }
             }
 
             @Override
@@ -263,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(int eventType, Bundle params) {
+                //Toast.makeText(MainActivity.this,"onEvent",Toast.LENGTH_LONG).show();
 
             }
         });
