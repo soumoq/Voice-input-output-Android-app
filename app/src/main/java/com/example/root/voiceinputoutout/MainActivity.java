@@ -119,15 +119,15 @@ public class MainActivity extends AppCompatActivity {
         text = selectText();
         voiceText.setText(text);
 
-
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Recording...");
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         if (!netoworkConnection()) {
+            Toast.makeText(MainActivity.this,"You are using in offline mode",Toast.LENGTH_LONG).show();
             mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
         }
 
@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBeginningOfSpeech() {
                 //Toast.makeText(MainActivity.this,"onBeginningOfSpeech",Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -159,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onEndOfSpeech() {
-                isEndOfSpeech=true;
+                isEndOfSpeech = true;
             }
 
             @Override
             public void onError(int error) {
                 if (!isEndOfSpeech) {
-                    Toast.makeText(MainActivity.this,"Please speak correctly",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Please speak correctly", Toast.LENGTH_LONG).show();
                     onEndOfSpeech();
                 }
             }
@@ -178,10 +177,10 @@ public class MainActivity extends AppCompatActivity {
                     String matchText = matches.get(0).toLowerCase();
                     speakEditText.setText(matchText);
 
-                    if (matchText.equals(text)) {
+                    if (false) {
                         Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
                         text = selectText();
-                        voiceText.setText(text);
+                        //voiceText.setText(text);
                     } else {
                         String words1[] = text.split("\\W+");
                         String words2[] = matchText.split("\\W+");
@@ -228,10 +227,10 @@ public class MainActivity extends AppCompatActivity {
                     String matchText = matches.get(0).toLowerCase();
                     speakEditText.setText(matchText);
 
-                    if (matchText.equals(text)) {
+                    if (false) {
                         Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
                         text = selectText();
-                        voiceText.setText(text);
+                        //voiceText.setText(text);
                     } else {
                         String words1[] = text.split("\\W+");
                         String words2[] = matchText.split("\\W+");
@@ -262,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setForegroundColor(Color.GREEN)
                                 .addTarget(voiceText)
                                 .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
+                        arr.clear();
 
                     }
 
