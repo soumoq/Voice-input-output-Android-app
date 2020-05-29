@@ -50,9 +50,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
+import static java.lang.System.exit;
 
 public class MainActivity extends AppCompatActivity {
     private TextToSpeech mTTS;
+    private Button nextText;
     private EditText voiceText;
     private SeekBar seekBerPitch;
     private SeekBar seekBerSpeed;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        nextText=(Button)findViewById(R.id.next_text);
         voiceText = (EditText) findViewById(R.id.voice_text);
         seekBerPitch = (SeekBar) findViewById(R.id.seek_ber_pitch);
         seekBerSpeed = (SeekBar) findViewById(R.id.seek_ber_speed);
@@ -119,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
         text = selectText();
         voiceText.setText(text);
 
+
+
+        nextText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text=selectText();
+                voiceText.setText(text);
+            }
+        });
+
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -127,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Recording...");
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         if (!netoworkConnection()) {
-            Toast.makeText(MainActivity.this,"You are using in offline mode",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "You are using in offline mode", Toast.LENGTH_LONG).show();
             mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
         }
 
@@ -177,47 +190,51 @@ public class MainActivity extends AppCompatActivity {
                     String matchText = matches.get(0).toLowerCase();
                     speakEditText.setText(matchText);
 
-                    if (false) {
-                        Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
-                        text = selectText();
-                        //voiceText.setText(text);
-                    } else {
-                        String words1[] = text.split("\\W+");
-                        String words2[] = matchText.split("\\W+");
-                        ArrayList<String> arr = new ArrayList<String>();
-                        try {
-                            for (int i = 0; i < words2.length; i++) {
-                                for (int j = i; j < words1.length; j++) {
-                                    if (words1[j].equals(words2[i])) {
-                                        arr.add(words1[j]);
-                                    }
+
+                    String words1[] = text.split("\\W+");
+                    String words2[] = matchText.split("\\W+");
+                    ArrayList<String> arr = new ArrayList<String>();
+                    try {
+                        for (int i = 0; i < words2.length; i++) {
+                            for (int j = i; j < words1.length; j++) {
+                                if (words1[j].equals(words2[i])) {
+                                    arr.add(words1[j]);
                                 }
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
 
-
-                        StringBuffer highLight = new StringBuffer();
-                        for (int i = 0; i < arr.size(); i++) {
-                            highLight = highLight.append(arr.get(i) + " ");
-                        }
-
-                        String stringHighlight = highLight.toString();
-
-
-                        new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
-                                .setForegroundColor(Color.GREEN)
-                                .addTarget(voiceText)
-                                .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+
+                    StringBuffer highLight = new StringBuffer();
+                    for (int i = 0; i < arr.size(); i++) {
+                        highLight = highLight.append(arr.get(i) + " ");
+                    }
+
+                    String stringHighlight = highLight.toString();
+
+
+                    new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
+                            .setForegroundColor(Color.GREEN)
+                            .addTarget(voiceText)
+                            .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
+
+
+                    if (matchText.equals(text)) {
+                        Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Try again...", Toast.LENGTH_LONG).show();
+                    }
+
+
 
                 }
 
-
             }
+
 
             @Override
             public void onPartialResults(Bundle bundle) {
@@ -227,43 +244,41 @@ public class MainActivity extends AppCompatActivity {
                     String matchText = matches.get(0).toLowerCase();
                     speakEditText.setText(matchText);
 
-                    if (false) {
-                        Toast.makeText(MainActivity.this, "Perfect", Toast.LENGTH_LONG).show();
-                        text = selectText();
-                        //voiceText.setText(text);
-                    } else {
-                        String words1[] = text.split("\\W+");
-                        String words2[] = matchText.split("\\W+");
-                        ArrayList<String> arr = new ArrayList<String>();
-                        try {
-                            for (int i = 0; i < words2.length; i++) {
-                                for (int j = i; j < words1.length; j++) {
-                                    if (words1[j].equals(words2[i])) {
-                                        arr.add(words1[j]);
-                                    }
+
+                    String words1[] = text.split("\\W+");
+                    String words2[] = matchText.split("\\W+");
+                    ArrayList<String> arr = new ArrayList<String>();
+                    try {
+                        for (int i = 0; i < words2.length; i++) {
+                            for (int j = i; j < words1.length; j++) {
+                                if (words1[j].equals(words2[i])) {
+                                    arr.add(words1[j]);
                                 }
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
 
-
-                        StringBuffer highLight = new StringBuffer();
-                        for (int i = 0; i < arr.size(); i++) {
-                            highLight = highLight.append(arr.get(i) + " ");
-                        }
-
-                        String stringHighlight = highLight.toString();
-
-
-                        new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
-                                .setForegroundColor(Color.GREEN)
-                                .addTarget(voiceText)
-                                .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
-                        arr.clear();
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+
+                    StringBuffer highLight = new StringBuffer();
+                    for (int i = 0; i < arr.size(); i++) {
+                        highLight = highLight.append(arr.get(i) + " ");
+                    }
+
+                    String stringHighlight = highLight.toString();
+
+
+                    new TextHighlighter().setBackgroundColor(Color.parseColor("#D6DBDF"))
+                            .setForegroundColor(Color.GREEN)
+                            .addTarget(voiceText)
+                            .highlight(stringHighlight.trim(), TextHighlighter.BASE_MATCHER);
+
+
+
+
+
 
                 }
 

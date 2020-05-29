@@ -113,5 +113,14 @@
         android:id="@+id/speak_button"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="next text"
+        android:layout_below="@+id/speak_button"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/next_text"
+        />
+
 
 </RelativeLayout>
